@@ -1,0 +1,28 @@
+name: news_app
+description: A news app creates with flutter
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.1.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  flutter_core:
+    git:
+      url: git://github.com/asserty308/flutter_core.git
+
+  cupertino_icons:
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/secrets.json
+
