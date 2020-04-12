@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_core/ui/dialogs.dart';
 import 'package:news_app/features/news/data/modes/articles_model.dart';
+import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ArticleScreen extends StatefulWidget {
@@ -39,39 +40,47 @@ class _ArticleScreenState extends State<ArticleScreen> {
           },
           body: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    IconButton(
-                      icon: Icon(Icons.web), 
-                      iconSize: 32,
-                      tooltip: 'Im Web anzeigen',
-                      onPressed: () => openUrl(),
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.share), 
-                      iconSize: 32,
-                      tooltip: 'Teilen',
-                      onPressed: () => null
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.star), 
-                      iconSize: 32,
-                      tooltip: 'Speichern',
-                      onPressed: () => null
-                    ),
-                  ],
-                ),
-                Text(widget.article.description),
-              ],
-            ),
+            child: articleContent,
           )
         ),
       ),
     );
   }
+
+  // Widgets
+
+  Widget get articleContent => Column(
+    children: <Widget>[
+      buttonRow,
+      Text(widget.article.description),
+    ],
+  );
+
+  Widget get buttonRow => Row(
+    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    children: <Widget>[
+      IconButton(
+        icon: Icon(Icons.web), 
+        iconSize: 32,
+        tooltip: 'Im Web anzeigen',
+        onPressed: () => openUrl(),
+      ),
+      IconButton(
+        icon: Icon(Icons.share), 
+        iconSize: 32,
+        tooltip: 'Teilen',
+        onPressed: () => share()
+      ),
+      IconButton(
+        icon: Icon(Icons.star), 
+        iconSize: 32,
+        tooltip: 'Speichern',
+        onPressed: () => toggleFavorite()
+      ),
+    ],
+  );
+
+  // Functions
 
   void openUrl() async {
     final url = widget.article.url;
@@ -81,5 +90,12 @@ class _ArticleScreenState extends State<ArticleScreen> {
     } else {
       showOKDialog(context, 'Fehler', 'Leider kann der Artikel nicht geöffnet werden.');
     }
+  }
+
+  void share() {
+    Share.share(widget.article.url);
+  }
+
+  void toggleFavorite() {
   }
 }
