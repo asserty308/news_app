@@ -15,9 +15,10 @@ class NewsApi {
     return _api.fetchJSON(path, query);
   }
 
-  Future<ArticlesModel> fetchTopHeadlines() async {
+  Future<ArticlesModel> fetchTopHeadlines([String category = 'general']) async {
     final query = {
       'country': 'de', // TODO(ya): Make editable from settings screen
+      'category': category,
     };
 
     final response = await _fetchJSON('top-headlines', query);

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:news_app/features/news/data/modes/articles_model.dart';
-import 'package:news_app/features/news/data/repositories/news_repository.dart';
-import 'package:news_app/features/news/ui/widgets/news_card.dart';
+import 'package:news_app/features/news/ui/widgets/news_list.dart';
 
 class NewsScreen extends StatefulWidget {
   @override
@@ -9,36 +7,37 @@ class NewsScreen extends StatefulWidget {
 }
 
 class _NewsScreenState extends State<NewsScreen> {
-  final _repo = NewsRepository();
-  List<Article> _articles = [];
-
-  void _loadNews() async {
-    _articles = await _repo.getTopHeadlines();
-    setState(() {});
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _loadNews();
-  }
+  List<String> _newsCategories = ['General', 'Technology', 'Science', 'Entertainment', 'Sports', 'Health', 'Business'];
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Top Schlagzeilen'),
-      ),
-      body: ListView.builder(
-        itemCount: _articles.length,
-        itemBuilder: (context, i) {
-          final article = _articles[i];
-          return Padding(
-            padding: EdgeInsets.all(8), 
-            child: NewsCard(article: article),
-          );
-        }
+    return DefaultTabController(
+      length: _newsCategories.length,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('Top Headlines'),
+          centerTitle: true,
+          bottom: TabBar(
+            isScrollable: true,
+            tabs: _buildTabs(),
+          ),
+        ),
+        body: TabBarView(
+          children: List<Widget>.generate(_newsCategories.length, (index) => NewsList(category: _newsCategories[index],))
+        )
       ),
     );
+  }
+
+  // Widgets
+
+  List<Widget> _buildTabs() {
+    List<Widget> tabs = [];
+
+    for (final category in _newsCategories) {
+      tabs.add(Tab(text: category,));
+    }
+
+    return tabs;
   }
 }
