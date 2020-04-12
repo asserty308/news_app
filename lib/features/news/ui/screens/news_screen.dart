@@ -7,37 +7,47 @@ class NewsScreen extends StatefulWidget {
 }
 
 class _NewsScreenState extends State<NewsScreen> {
-  List<String> _newsCategories = ['General', 'Technology', 'Science', 'Entertainment', 'Sports', 'Health', 'Business'];
+  Map<String, String> _newsCategories = {
+    'general': 'General', 
+    'technology': 'Technology', 
+    'science': 'Science', 
+    'entertainment': 'Entertainment', 
+    'sports': 'Sports', 
+    'health': 'Health', 
+    'business': 'Business'
+  };
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: _newsCategories.length,
       child: Scaffold(
-        appBar: AppBar(
-          title: Text('Top Headlines'),
-          centerTitle: true,
-          bottom: TabBar(
-            isScrollable: true,
-            tabs: _buildTabs(),
-          ),
-        ),
+        appBar: _appBar,
         body: TabBarView(
-          children: List<Widget>.generate(_newsCategories.length, (index) => NewsList(category: _newsCategories[index],))
-        )
+          children: List<Widget>.generate(_newsCategories.length, (index) => NewsList(
+            category: _newsCategories.keys.toList()[index],
+          )),
+        ),
       ),
     );
   }
 
   // Widgets
 
-  List<Widget> _buildTabs() {
-    List<Widget> tabs = [];
+  Widget get _appBar => AppBar(
+    title: Text('Top Headlines'),
+    centerTitle: true,
+    leading: IconButton(icon: Icon(Icons.search), onPressed: () => null),
+    actions: <Widget>[
+      IconButton(icon: Icon(Icons.settings), onPressed: () => null),
+    ],
+    bottom: TabBar(
+      isScrollable: true,
+      tabs: _tabs,
+    ),
+  );
 
-    for (final category in _newsCategories) {
-      tabs.add(Tab(text: category,));
-    }
-
-    return tabs;
-  }
+  List<Widget> get _tabs => List<Widget>.generate(_newsCategories.length, (index) => Tab(
+    text: _newsCategories.values.toList()[index],
+  ));
 }
