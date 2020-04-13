@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:news_app/features/news/data/repositories/news_repository.dart';
 import 'package:news_app/features/news/ui/widgets/news_list.dart';
 
 class NewsScreen extends StatefulWidget {
@@ -7,26 +8,28 @@ class NewsScreen extends StatefulWidget {
 }
 
 class _NewsScreenState extends State<NewsScreen> {
-  Map<String, String> _newsCategories = {
-    'general': 'General', 
-    'technology': 'Technology', 
-    'science': 'Science', 
-    'entertainment': 'Entertainment', 
-    'sports': 'Sports', 
-    'health': 'Health', 
-    'business': 'Business'
-  };
-
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: _newsCategories.length,
-      child: Scaffold(
-        appBar: _appBar,
-        body: TabBarView(
-          children: List<Widget>.generate(_newsCategories.length, (index) => NewsList(
-            category: _newsCategories.keys.toList()[index],
-          )),
+    return Scaffold(
+        body: DefaultTabController(
+          length: newsRepo.allCategories.length,
+          child: NestedScrollView(
+            headerSliverBuilder: (context, innerBoxIsScrolled) {
+              return <Widget>[
+                SliverOverlapAbsorber(
+                  handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                  child: SliverSafeArea(
+                    top: false,
+                    sliver: _appBar(innerBoxIsScrolled),
+                  ),
+                ),
+              ];
+            }, 
+            body: TabBarView(
+              children: List<Widget>.generate(newsRepo.allCategories.length, (index) => NewsList(
+                category: newsRepo.allCategories.keys.toList()[index],
+              )),
+          )
         ),
       ),
     );
@@ -34,20 +37,46 @@ class _NewsScreenState extends State<NewsScreen> {
 
   // Widgets
 
-  Widget get _appBar => AppBar(
-    title: Text('Top Headlines'),
+  Widget _appBar(bool innerBoxIsScrolled) => SliverAppBar(
+    title: Text('Top Headlines', style: TextStyle(color: Colors.black),),
+    backgroundColor: Colors.white,
+    iconTheme: IconThemeData(color: Colors.black),
+    floating: true,
+    pinned: true,
+    snap: false,
+    primary: true,
+    forceElevated: innerBoxIsScrolled,
     centerTitle: true,
-    leading: IconButton(icon: Icon(Icons.search), onPressed: () => null),
-    actions: <Widget>[
-      IconButton(icon: Icon(Icons.settings), onPressed: () => null),
-    ],
-    bottom: TabBar(
-      isScrollable: true,
-      tabs: _tabs,
-    ),
+    actions: _actions,
+    bottom: _tabBar,
   );
 
-  List<Widget> get _tabs => List<Widget>.generate(_newsCategories.length, (index) => Tab(
-    text: _newsCategories.values.toList()[index],
+  Widget get _tabBar => TabBar(
+    isScrollable: true,
+    labelColor: Colors.black,
+    tabs: _tabs,
+  );
+
+  List<Widget> get _actions => [
+    IconButton(icon: Icon(Icons.search), onPressed: () => null),
+    PopupMenuButton<int>(
+      itemBuilder: (context) => [
+        PopupMenuItem<int>(
+          value: 0,
+          child: Text('Favorites'),
+        ),
+        PopupMenuItem<int>(
+          value: 1,
+          child: Text('Settings'),
+        ),
+      ],
+      onSelected: (index) => null,
+    ),
+  ];
+
+  List<Widget> get _tabs => List<Widget>.generate(newsRepo.allCategories.length, (index) => Tab(
+    text: newsRepo.allCategories.values.toList()[index],
   ));
+
+  // Functions
 }

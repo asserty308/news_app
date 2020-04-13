@@ -13,7 +13,6 @@ class NewsList extends StatefulWidget {
 }
 
 class _NewsListState extends State<NewsList> {
-  final _repo = NewsRepository();
   List<Article> _articles = [];
 
   @override
@@ -39,7 +38,7 @@ class _NewsListState extends State<NewsList> {
   // Functions
 
   void _loadNews() async {
-    _articles = await _repo.getTopHeadlines(widget.category);
+    _articles = await newsRepo.getTopHeadlines(widget.category);
 
     if (mounted) {
       setState(() {});
