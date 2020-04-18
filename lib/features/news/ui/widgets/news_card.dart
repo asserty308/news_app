@@ -19,14 +19,54 @@ class NewsCard extends StatelessWidget {
     if (url == null || url.isEmpty) {
       return Container();
     }
-
-    return BackgroundTitleCard(
-      background: Image.network(
-        article.urlToImage,
-        fit: BoxFit.cover,
-      ), 
-      title: article.title, 
-      onTap: () => showScreen(context, ArticleScreen(article: article)),
+    
+    return Card(
+      color: Colors.white,
+      elevation: 1.0,
+      clipBehavior: Clip.antiAliasWithSaveLayer,
+      margin: const EdgeInsets.all(8),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12)
+      ),
+      child: GestureDetector(
+        onTap: () => showScreen(context, ArticleScreen(article: article)),
+        child: Column(
+          children: <Widget>[
+            Container(
+              width: MediaQuery.of(context).size.width,
+              height: 200,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  fit: BoxFit.cover,
+                  image: NetworkImage(article.urlToImage),
+                ),
+              ),
+            ),
+            Container(
+              height: 125,
+              child: Column(
+                children: <Widget>[ 
+                  Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Text(
+                      article.title,
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                      maxLines: 2,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Text(
+                      article.description,
+                      maxLines: 3,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ]
+        ),
+      )
     );
   }
 }
