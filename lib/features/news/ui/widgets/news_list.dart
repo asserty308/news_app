@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_core/ui/widgets/center_progress_indicator.dart';
+import 'package:flutter_core/ui/widgets/center_text.dart';
+import 'package:news_app/features/news/bloc/load_news/load_news_bloc.dart';
+import 'package:news_app/features/news/bloc/load_news/load_news_events.dart';
+import 'package:news_app/features/news/bloc/load_news/load_news_states.dart';
 import 'package:news_app/features/news/data/modes/articles_model.dart';
-import 'package:news_app/features/news/data/repositories/news_repository.dart';
 import 'package:news_app/features/news/ui/widgets/news_card.dart';
 
 class NewsList extends StatefulWidget {
@@ -13,35 +18,56 @@ class NewsList extends StatefulWidget {
 }
 
 class _NewsListState extends State<NewsList> {
-  List<Article> _articles = [];
+  final _bloc = LoadNewsBloc();
 
   @override
   void initState() {
     super.initState();
     _loadNews();
   }
+
+  @override
+  void dispose() {
+    _bloc.close();
+    super.dispose();
+  }
   
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: _articles.length,
-      itemBuilder: (context, i) {
-        final article = _articles[i];
-        return Padding(
-          padding: EdgeInsets.all(8), 
-          child: NewsCard(article: article),
-        );
-      }
-    );
+    return _blocBuilder;
   }
+
+  Widget get _blocBuilder => BlocBuilder(
+    bloc: _bloc,
+    builder: (context, state) {
+      if (state is LoadNewsLoading) {
+        return CenterProgressIndicator();
+      }
+
+      if (state is LoadNewsLoaded) {
+        return _articleList(state.articles);
+      }
+
+      if (state is LoadNewsEmpty || state is LoadNewsError) {
+        return CenterText('No articles found. Check your connection and try again.');
+      }
+
+      // invalid state
+      return Container();
+    }
+  );
+
+  Widget _articleList(List<Article> articles) => ListView.builder(
+    itemCount: articles.length,
+    itemBuilder: (context, i) {
+      final article = articles[i];
+      return NewsCard(article: article);
+    }
+  );
 
   // Functions
 
   void _loadNews() async {
-    _articles = await newsRepo.getTopHeadlines(widget.category);
-
-    if (mounted) {
-      setState(() {});
-    }
+    _bloc.add(GetTopHeadlines(widget.category));
   }
 }

@@ -39,7 +39,7 @@ class BackgroundTitleCard extends StatelessWidget {
       clipBehavior: Clip.antiAliasWithSaveLayer,
       margin: const EdgeInsets.all(8),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10)
+        borderRadius: BorderRadius.circular(12)
       ),
       child: GestureDetector(
         onTap: onTap,

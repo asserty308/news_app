@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:news_app/features/news/data/repositories/news_repository.dart';
 import 'package:news_app/features/news/ui/widgets/news_list.dart';
 
 class NewsScreen extends StatefulWidget {
@@ -8,27 +7,38 @@ class NewsScreen extends StatefulWidget {
 }
 
 class _NewsScreenState extends State<NewsScreen> {
+  final Map<String, String> _tabCategories = {
+    'general': 'General', 
+    'technology': 'Technology', 
+    'science': 'Science', 
+    'entertainment': 'Entertainment', 
+    'sports': 'Sports', 
+    'health': 'Health', 
+    'business': 'Business'
+  };
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: DefaultTabController(
-          length: newsRepo.allCategories.length,
+          length: _tabCategories.length,
           child: NestedScrollView(
-            headerSliverBuilder: (context, innerBoxIsScrolled) {
-              return <Widget>[
-                SliverOverlapAbsorber(
-                  handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-                  child: SliverSafeArea(
-                    top: false,
-                    sliver: _appBar(innerBoxIsScrolled),
-                  ),
+            headerSliverBuilder: (context, innerBoxIsScrolled) => <Widget>[
+              SliverOverlapAbsorber(
+                handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                child: SliverSafeArea(
+                  top: false,
+                  sliver: _appBar(innerBoxIsScrolled),
                 ),
-              ];
-            }, 
+              ),
+            ],
             body: TabBarView(
-              children: List<Widget>.generate(newsRepo.allCategories.length, (index) => NewsList(
-                category: newsRepo.allCategories.keys.toList()[index],
-              )),
+              children: List<Widget>.generate(
+                _tabCategories.length, 
+                (index) => NewsList(
+                  category: _tabCategories.keys.toList()[index],
+                )
+              ),
           )
         ),
       ),
@@ -74,9 +84,7 @@ class _NewsScreenState extends State<NewsScreen> {
     ),
   ];
 
-  List<Widget> get _tabs => List<Widget>.generate(newsRepo.allCategories.length, (index) => Tab(
-    text: newsRepo.allCategories.values.toList()[index],
+  List<Widget> get _tabs => List<Widget>.generate(_tabCategories.length, (index) => Tab(
+    text: _tabCategories.values.toList()[index],
   ));
-
-  // Functions
 }

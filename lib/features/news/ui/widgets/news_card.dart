@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_core/routing/routing.dart';
-import 'package:news_app/features/core/widgets/background_title_card.dart';
+import 'package:news_app/core/widgets/background_title_card.dart';
 import 'package:news_app/features/news/data/modes/articles_model.dart';
 import 'package:news_app/features/news/ui/screens/article_screen.dart';
 

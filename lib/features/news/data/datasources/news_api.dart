@@ -1,5 +1,5 @@
 import 'package:flutter_core/web/base_api.dart';
-import 'package:news_app/features/core/util/secret_loader.dart';
+import 'package:news_app/core/util/secret_loader.dart';
 import 'package:news_app/features/news/data/modes/articles_model.dart';
 
 class NewsApi {
