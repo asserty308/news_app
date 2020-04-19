@@ -20,26 +20,21 @@ class _NewsScreenState extends State<NewsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: DefaultTabController(
-          length: _tabCategories.length,
+      body: DefaultTabController(
+        length: _tabCategories.length,
+        child: SafeArea( // SafeArea removes the default space between tabs and content
           child: NestedScrollView(
             headerSliverBuilder: (context, innerBoxIsScrolled) => <Widget>[
               SliverOverlapAbsorber(
                 handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
                 child: SliverSafeArea(
                   top: false,
-                  sliver: _appBar(innerBoxIsScrolled),
+                  sliver: _appBar,
                 ),
               ),
             ],
-            body: TabBarView(
-              children: List<Widget>.generate(
-                _tabCategories.length, 
-                (index) => NewsList(
-                  category: _tabCategories.keys.toList()[index],
-                )
-              ),
-          )
+            body: _body,
+          ),
         ),
       ),
     );
@@ -47,15 +42,14 @@ class _NewsScreenState extends State<NewsScreen> {
 
   // Widgets
 
-  Widget _appBar(bool innerBoxIsScrolled) => SliverAppBar(
+  Widget get _appBar => SliverAppBar(
     title: Text('Top Headlines', style: TextStyle(color: Colors.black),),
     backgroundColor: Colors.white,
     iconTheme: IconThemeData(color: Colors.black),
-    floating: true,
-    pinned: true,
-    snap: false,
+    floating: true, // makes title hide
+    pinned: true, // when false, tabs would hide as well
     primary: true,
-    forceElevated: innerBoxIsScrolled,
+    forceElevated: true,
     centerTitle: true,
     actions: _actions,
     bottom: _tabBar,
@@ -87,4 +81,13 @@ class _NewsScreenState extends State<NewsScreen> {
   List<Widget> get _tabs => List<Widget>.generate(_tabCategories.length, (index) => Tab(
     text: _tabCategories.values.toList()[index],
   ));
+
+  Widget get _body => TabBarView(
+    children: List<Widget>.generate(
+      _tabCategories.length, 
+      (index) => NewsList(
+        category: _tabCategories.keys.toList()[index],
+      )
+    ),
+  );
 }

@@ -57,17 +57,21 @@ class _NewsListState extends State<NewsList> {
     }
   );
 
-  Widget _articleList(List<Article> articles) => ListView.builder(
-    itemCount: articles.length,
-    itemBuilder: (context, i) {
-      final article = articles[i];
-      return NewsCard(article: article);
-    }
+  Widget _articleList(List<Article> articles) => RefreshIndicator(
+    onRefresh: () => _loadNews(),
+    child: ListView.builder(
+      padding: EdgeInsets.all(8),
+      itemCount: articles.length,
+      itemBuilder: (context, i) {
+        final article = articles[i];
+        return NewsCard(article: article);
+      }
+    ),
   );
 
   // Functions
 
-  void _loadNews() async {
+  Future<void> _loadNews() async {
     _bloc.add(GetTopHeadlines(widget.category));
   }
 }

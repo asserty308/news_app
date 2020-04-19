@@ -52,6 +52,8 @@ class Article {
     this.content
   });
 
+  DateTime get publishDate => DateTime.parse(publishedAt);
+
   Article.fromJson(Map<String, dynamic> json) {
     source = json['source'] != null ? ArticleSource.fromJson(json['source']) : null;
     author = json['author'];
