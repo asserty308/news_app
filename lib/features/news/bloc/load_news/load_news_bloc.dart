@@ -4,27 +4,47 @@ import 'package:news_app/features/news/bloc/load_news/load_news_states.dart';
 import 'package:news_app/features/news/data/repositories/news_repository.dart';
 
 class LoadNewsBloc extends Bloc<LoadNewsEvent, LoadNewsState> {
-  final _newsRepo = NewsRepository();
-
   @override
   LoadNewsState get initialState => LoadNewsEmpty();
 
   @override
   Stream<LoadNewsState> mapEventToState(LoadNewsEvent event) async* {
     if (event is GetTopHeadlines) {
-      yield LoadNewsLoading();
+      yield* _mapGetTopHeadlinesToState(event);
+    } else if (event is GetFavorites) {
+      yield* _mapGetFavoritesToState(event);
+    }
+  }
 
-      try {
-        final topHeadlines = await _newsRepo.getTopHeadlines(event.category);
+  Stream<LoadNewsState> _mapGetTopHeadlinesToState(GetTopHeadlines event) async* {
+    yield LoadNewsLoading();
 
-        if (topHeadlines.isEmpty) {
-          yield LoadNewsEmpty();
-        } else {
-          yield LoadNewsLoaded(articles: topHeadlines);
-        }
-      } catch (_) {
-        yield LoadNewsError();
+    try {
+      final topHeadlines = await newsRepo.getTopHeadlines(event.category);
+
+      if (topHeadlines.isEmpty) {
+        yield LoadNewsEmpty();
+      } else {
+        yield LoadNewsLoaded(articles: topHeadlines);
       }
+    } catch (_) {
+      yield LoadNewsError();
+    }
+  }
+
+  Stream<LoadNewsState> _mapGetFavoritesToState(GetFavorites event) async* {
+    yield LoadNewsLoading();
+
+    try {
+      final favorites = newsRepo.getFavorites();
+
+      if (favorites.isEmpty) {
+        yield LoadNewsEmpty();
+      } else {
+        yield LoadNewsLoaded(articles: favorites);
+      }
+    } catch (_) {
+      yield LoadNewsError();
     }
   }
 }

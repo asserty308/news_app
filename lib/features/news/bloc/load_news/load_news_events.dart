@@ -5,3 +5,5 @@ class GetTopHeadlines extends LoadNewsEvent {
 
   final String category;
 }
+
+class GetFavorites extends LoadNewsEvent {}

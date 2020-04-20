@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:news_app/features/news/ui/widgets/favorites_list.dart';
 import 'package:news_app/features/news/ui/widgets/news_list.dart';
 
 class NewsScreen extends StatefulWidget {
@@ -8,6 +9,7 @@ class NewsScreen extends StatefulWidget {
 
 class _NewsScreenState extends State<NewsScreen> {
   final Map<String, String> _tabCategories = {
+    'favorites': 'Favorites',
     'general': 'General', 
     'technology': 'Technology', 
     'science': 'Science', 
@@ -22,6 +24,7 @@ class _NewsScreenState extends State<NewsScreen> {
     return Scaffold(
       body: DefaultTabController(
         length: _tabCategories.length,
+        initialIndex: 1, // do not show favorites (index 0) as default
         child: SafeArea( // SafeArea removes the default space between tabs and content
           child: NestedScrollView(
             headerSliverBuilder: (context, innerBoxIsScrolled) => <Widget>[
@@ -78,16 +81,30 @@ class _NewsScreenState extends State<NewsScreen> {
     ),
   ];
 
-  List<Widget> get _tabs => List<Widget>.generate(_tabCategories.length, (index) => Tab(
-    text: _tabCategories.values.toList()[index],
-  ));
+  List<Widget> get _tabs => List<Widget>.generate(_tabCategories.length, (index) {
+    if (index == 0) {
+      return Tab(
+        icon: Icon(Icons.favorite),
+      );
+    }
+
+    return Tab(
+      text: _tabCategories.values.toList()[index],
+    );
+  });
 
   Widget get _body => TabBarView(
     children: List<Widget>.generate(
       _tabCategories.length, 
-      (index) => NewsList(
-        category: _tabCategories.keys.toList()[index],
-      )
+      (index) { 
+        if (index == 0) {
+          return FavoritesList();
+        }
+
+        return NewsList(
+          category: _tabCategories.keys.toList()[index],
+        );
+      }
     ),
   );
 }
