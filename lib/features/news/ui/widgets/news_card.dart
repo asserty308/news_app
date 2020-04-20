@@ -57,7 +57,6 @@ class NewsCard extends StatelessWidget {
   );
 
   Widget _buildArticleInfo() => Container(
-    height: 200,
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[ 

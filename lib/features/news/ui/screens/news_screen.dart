@@ -16,7 +16,7 @@ class _NewsScreenState extends State<NewsScreen> {
     'entertainment': 'Entertainment', 
     'sports': 'Sports', 
     'health': 'Health', 
-    'business': 'Business'
+    'business': 'Business',
   };
 
   @override
