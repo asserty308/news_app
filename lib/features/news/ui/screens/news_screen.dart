@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:news_app/features/main/bloc/routing/app_routing_bloc.dart';
+import 'package:news_app/features/main/bloc/routing/app_routing_events.dart';
 import 'package:news_app/features/news/ui/widgets/favorites_list.dart';
 import 'package:news_app/features/news/ui/widgets/news_list.dart';
 
@@ -43,8 +46,6 @@ class _NewsScreenState extends State<NewsScreen> {
     );
   }
 
-  // Widgets
-
   Widget get _appBar => SliverAppBar(
     title: Text('Top Headlines', style: TextStyle(color: Colors.black),),
     backgroundColor: Colors.white,
@@ -77,7 +78,14 @@ class _NewsScreenState extends State<NewsScreen> {
           child: Text('Settings'),
         ),
       ],
-      onSelected: (index) => null,
+      onSelected: (index) {
+        switch (index) {
+          case 0:
+            return;
+          case 1:
+            BlocProvider.of<AppRoutingBloc>(context).add(ShowSettings());
+        }
+      },
     ),
   ];
 
