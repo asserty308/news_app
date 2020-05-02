@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_core/routing/routing.dart';
 import 'package:flutter_core/ui/dialogs.dart';
 import 'package:intl/intl.dart';
 import 'package:news_app/features/news/data/modes/articles_model.dart';

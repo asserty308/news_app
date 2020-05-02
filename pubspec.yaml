@@ -1,7 +1,7 @@
 name: news_app
-description: A news app creates with flutter
+description: A news app created with flutter
 
-version: 1.0.0+1
+version: 1.0.0+2
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
